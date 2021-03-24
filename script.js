@@ -46,7 +46,7 @@ function setTime() {
   keyframeSec.appendRule(`from {transform:  rotate(${scale(seconds, 0, 60, 0, 360)+180}deg);}`);
   keyframeSec.appendRule(`to {transform:  rotate(${scale(seconds, 0, 60, 0, 360)+540}deg);}`);
 
-  timeEl.innerHTML =  `${hours}:${minutes < 10 ? `0${hours}` : minutes} ${ampm}`;
+  timeEl.innerHTML =  `${hoursForClock}:${minutes < 10 ? `0${minutes}` : minutes} ${ampm}`;
   dateEl.innerHTML = `${days[day]}, ${months[month]}, <span class="circle">${date}</span>`;
 }
 
