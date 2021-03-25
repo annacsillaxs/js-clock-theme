@@ -8,6 +8,8 @@ const toggle = document.querySelector('.toggle');
 const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
+let time = new Date();
+
 let myRules = document.styleSheets[0].cssRules;
 let keyframeHour = myRules[16];
 let keyframeMin = myRules[17];
@@ -25,33 +27,72 @@ toggle.addEventListener('click', (e) => {
   }
 })
 
-function setTime() {
-  const time = new Date();
-  const month = time.getMonth();
-  const day = time.getDay();
-  const date = time.getDate();
-  const hours = time.getHours();
-  const hoursForClock = hours % 12;
-  const minutes = time.getMinutes();
-  const seconds = time.getSeconds();
-  const ampm = hours >= 12 ? 'PM' : 'AM';
-
-
-  keyframeHour.appendRule(`from {transform:  rotate(${scale(hoursForClock, 0, 12, 0, 360)+180}deg);}`);
-  keyframeHour.appendRule(`to {transform:  rotate(${scale(hoursForClock, 0, 12, 0, 360)+540}deg);}`);
-
-  keyframeMin.appendRule(`from {transform:  rotate(${scale(minutes, 0, 60, 0, 360)+180}deg);}`);
-  keyframeMin.appendRule(`to {transform:  rotate(${scale(minutes, 0, 60, 0, 360)+540}deg);}`);
-
-  keyframeSec.appendRule(`from {transform:  rotate(${scale(seconds, 0, 60, 0, 360)+180}deg);}`);
-  keyframeSec.appendRule(`to {transform:  rotate(${scale(seconds, 0, 60, 0, 360)+540}deg);}`);
-
-  timeEl.innerHTML =  `${hoursForClock}:${minutes < 10 ? `0${minutes}` : minutes} ${ampm}`;
-  dateEl.innerHTML = `${days[day]}, ${months[month]}, <span class="circle">${date}</span>`;
-}
-
 const scale = (num, in_min, in_max, out_min, out_max) => {
   return (num - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
 }
 
-setTime();
+function setDate() {
+  time = new Date();
+  const month = time.getMonth();
+  const day = time.getDay();
+  const date = time.getDate();
+  
+  return dateEl.innerHTML = `${days[day]}, ${months[month]}, <span class="circle">${date}</span>`;
+}
+
+function getHours() {
+  return hour = time.getHours();
+}
+
+function getMin() {
+  return min = time.getMinutes();
+}
+
+function getSec() {
+ return sec = time.getSeconds();
+}
+
+function setTime() {
+  time = new Date();
+  hour = getHours();
+  min = getMin();
+
+  return timeEl.innerHTML =  `${hour}:${min < 10 ? `0${min}` : min}`;
+}
+
+function setHourNeedle(hour) {
+  hour = getHours();
+  const hoursForClock = hour % 12;
+
+  keyframeHour.appendRule(`from {transform:  rotate(${scale(hoursForClock, 0, 12, 0, 360)+180}deg);}`);
+  keyframeHour.appendRule(`to {transform:  rotate(${scale(hoursForClock, 0, 12, 0, 360)+540}deg);}`);
+}
+
+function setMinNeedle(min) {
+  min = getMin();
+
+  keyframeMin.appendRule(`from {transform:  rotate(${scale(min, 0, 60, 0, 360)+180}deg);}`);
+  keyframeMin.appendRule(`to {transform:  rotate(${scale(min, 0, 60, 0, 360)+540}deg);}`);
+}
+
+function setSecNeedle(sec) {
+  sec = getSec();
+
+  keyframeSec.appendRule(`from {transform:  rotate(${scale(sec, 0, 60, 0, 360)+180}deg);}`);
+  keyframeSec.appendRule(`to {transform:  rotate(${scale(sec, 0, 60, 0, 360)+540}deg);}`);
+
+}
+
+setHourNeedle()
+setMinNeedle()
+setSecNeedle()
+
+function updateTime() {
+  setDate();
+  setTime();
+  console.log('object')
+}
+
+updateTime();
+
+setInterval(updateTime, 1000);
